@@ -1,0 +1,54 @@
+{
+    "name": "Product",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Product name"
+      },
+      "category": {
+        "type": "string",
+        "enum": [
+          "rice",
+          "spices",
+          "lentils",
+          "snacks",
+          "beverages",
+          "frozen",
+          "fresh"
+        ],
+        "description": "Product category"
+      },
+      "price": {
+        "type": "number",
+        "description": "Product price"
+      },
+      "unit": {
+        "type": "string",
+        "description": "Unit of measurement (kg, lb, pack, etc.)"
+      },
+      "description": {
+        "type": "string",
+        "description": "Product description"
+      },
+      "image_url": {
+        "type": "string",
+        "description": "Product image URL"
+      },
+      "in_stock": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether product is in stock"
+      },
+      "featured": {
+        "type": "boolean",
+        "default": false,
+        "description": "Featured product"
+      }
+    },
+    "required": [
+      "name",
+      "category",
+      "price"
+    ]
+  }
