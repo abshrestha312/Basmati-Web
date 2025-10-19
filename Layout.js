@@ -2,26 +2,16 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Phone, Mail, MapPin, Menu, X, Shield } from "lucide-react";
-import { User } from "@/entities/User";
+import { Phone, Mail, MapPin, Menu, X, Shield, LogIn, LogOut, User as UserIcon } from "lucide-react";
+import { useAuth } from "./contexts/AuthContext";
+import AuthModal from "@/components/AuthModal";
+import { LoadingPage } from "@/components/ui/loading";
 
 export default function Layout({ children }) {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-  const [user, setUser] = React.useState(null);
-  
-  React.useEffect(() => {
-    checkUser();
-  }, []);
-
-  const checkUser = async () => {
-    try {
-      const currentUser = await User.me();
-      setUser(currentUser);
-    } catch (error) {
-      // User not logged in
-    }
-  };
+  const [authModalOpen, setAuthModalOpen] = React.useState(false);
+  const { user, loading, signOut } = useAuth();
   
   const navItems = [
     { name: "Home", path: createPageUrl("Home") },
@@ -32,6 +22,11 @@ export default function Layout({ children }) {
     { name: "About", path: createPageUrl("About") },
     { name: "Contact", path: createPageUrl("Contact") }
   ];
+
+  // Show loading page while auth is initializing
+  if (loading) {
+    return <LoadingPage />;
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -86,6 +81,33 @@ export default function Layout({ children }) {
                   Admin
                 </Link>
               )}
+              
+              {/* Auth Section */}
+              <div className="flex items-center gap-4 ml-4 pl-4 border-l border-gray-700">
+                {user ? (
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 text-gray-300">
+                      <UserIcon className="w-4 h-4" />
+                      <span className="text-sm">{user.full_name || user.email}</span>
+                    </div>
+                    <button
+                      onClick={signOut}
+                      className="flex items-center gap-2 text-sm text-gray-300 hover:text-[var(--primary-gold)] transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setAuthModalOpen(true)}
+                    className="flex items-center gap-2 text-sm text-gray-300 hover:text-[var(--primary-gold)] transition-colors"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    Sign In
+                  </button>
+                )}
+              </div>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -128,6 +150,36 @@ export default function Layout({ children }) {
                   Admin
                 </Link>
               )}
+              
+              {/* Mobile Auth Section */}
+              <div className="border-t border-gray-800 pt-4 mt-4">
+                {user ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 px-4 text-gray-300">
+                      <UserIcon className="w-4 h-4" />
+                      <span className="text-sm">{user.full_name || user.email}</span>
+                    </div>
+                    <button
+                      onClick={signOut}
+                      className="flex items-center gap-2 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 transition-all w-full text-left"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setAuthModalOpen(true);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex items-center gap-2 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 transition-all w-full text-left"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    Sign In
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -195,6 +247,12 @@ export default function Layout({ children }) {
           </div>
         </div>
       </footer>
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={authModalOpen} 
+        onClose={() => setAuthModalOpen(false)} 
+      />
     </div>
   );
 }
