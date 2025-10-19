@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./Layout";
 import Home from "./Pages/Home";
@@ -12,18 +13,18 @@ import Recipes from "./Pages/Recipes";
 import Admin from "./Pages/Admin";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="products" element={<Products />} />
-        <Route path="cafe" element={<Cafe />} />
-        <Route path="about" element={<About />} />
-        <Route path="contact" element={<Contact />} />
-        <Route path="deals" element={<Deals />} />
-        <Route path="recipes" element={<Recipes />} />
-        <Route path="admin" element={<Admin />} />
-      </Route>
-    </Routes>
-  </BrowserRouter>
+  <React.StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout><Home /></Layout>} />
+        <Route path="/products" element={<Layout><Products /></Layout>} />
+        <Route path="/cafe" element={<Layout><Cafe /></Layout>} />
+        <Route path="/about" element={<Layout><About /></Layout>} />
+        <Route path="/contact" element={<Layout><Contact /></Layout>} />
+        <Route path="/deals" element={<Layout><Deals /></Layout>} />
+        <Route path="/recipes" element={<Layout><Recipes /></Layout>} />
+        <Route path="/admin" element={<Layout><Admin /></Layout>} />
+      </Routes>
+    </BrowserRouter>
+  </React.StrictMode>
 );
